@@ -325,10 +325,13 @@ class FundDataVisualization(QtWidgets.QWidget):
         # Apply color to rows based on change percentage
         for row in range(self.my_funds_table.rowCount()):
             change_item = self.my_funds_table.item(row, 5)
-            change_value = float(change_item.text().strip('%'))
-            color = self.calculate_color(change_value, min_change, max_change)
-            for col in range(self.my_funds_table.columnCount()):
-                self.my_funds_table.item(row, col).setBackground(color)
+            if change_item is not None:
+                change_value = float(change_item.text().strip('%'))
+                color = self.calculate_color(change_value, min_change, max_change)
+                for col in range(self.my_funds_table.columnCount()):
+                    item = self.my_funds_table.item(row, col)
+                    if item is not None:
+                        item.setBackground(color)
 
         # Update the QLabel with the total cost
         self.total_cost_label.setText(f"Total Cost: ₺{total_cost_all_funds:.2f}")
