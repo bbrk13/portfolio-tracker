@@ -197,6 +197,10 @@ class FundDataVisualization(QtWidgets.QWidget):
         self.total_cost_label = QtWidgets.QLabel("Total Cost: N/A")
         summary_layout.addWidget(self.total_cost_label)
 
+        # QLabel for displaying total value
+        self.total_value_label = QtWidgets.QLabel("Total Value: N/A")
+        summary_layout.addWidget(self.total_value_label)
+
         # QLabel for displaying average holding days
         self.avg_holding_days_label = QtWidgets.QLabel("Average Holding Days: N/A")
         summary_layout.addWidget(self.avg_holding_days_label)
@@ -263,6 +267,7 @@ class FundDataVisualization(QtWidgets.QWidget):
         change_percentages = []  # List to store change percentages
         total_weighted_days = 0
         total_quantity = 0
+        total_value_all_funds = 0.0  # Initialize total value
 
         for entry in self.portfolio_data:
             try:
@@ -306,6 +311,9 @@ class FundDataVisualization(QtWidgets.QWidget):
             total_weighted_days += avg_holding_days * quantity
             total_quantity += quantity
 
+            # Accumulate total value
+            total_value_all_funds += total_value
+
             row_position = self.my_funds_table.rowCount()
             self.my_funds_table.insertRow(row_position)
             self.my_funds_table.setItem(row_position, 0, QtWidgets.QTableWidgetItem(symbol))
@@ -336,6 +344,9 @@ class FundDataVisualization(QtWidgets.QWidget):
         # Update the QLabel with the total cost
         self.total_cost_label.setText(f"Total Cost: ₺{total_cost_all_funds:.2f}")
 
+        # Update the QLabel with the total value
+        self.total_value_label.setText(f"Total Value: ₺{total_value_all_funds:.2f}")
+
         # Update the QLabel with the total change
         self.total_change_label.setText(f"Total Change: ₺{total_change_money:.2f}")
         self.total_change_label.setStyleSheet("color: green;" if total_change_money > 0 else "color: red;")
@@ -352,6 +363,8 @@ class FundDataVisualization(QtWidgets.QWidget):
         # Calculate and update total change percentage per average holding day
         total_change_per_ahd = total_change_percentage / average_holding_days if average_holding_days > 0 else 0
         self.total_change_per_ahd_label.setText(f"Total Change (%)/AHD: {total_change_per_ahd:.2f}")
+
+        
 
     def get_latest_price(self, symbol):
         try:
